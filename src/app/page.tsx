@@ -8,7 +8,6 @@ import { ChromePicker, ColorResult } from 'react-color'
 import { Card } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { Bell, Sun, Moon, Zap } from 'lucide-react'
-import useSound from 'use-sound'
 import * as THREE from 'three'
 
 interface CubeProps {
@@ -40,9 +39,6 @@ export default function Home() {
   const [progress, setProgress] = useState<number>(0)
   const [text, setText] = useState<string>('')
   const [cubeColor, setCubeColor] = useState<string>("#818CF8")
-  const [lightIntensity, setLightIntensity] = useState<number>(0.5)
-  const [play] = useSound('./assets/click-sound.mp3');
-
   const [showColorPicker, setShowColorPicker] = useState<boolean>(false)
   const colorPickerRef = useRef<HTMLDivElement | null>(null)
 
@@ -87,34 +83,34 @@ export default function Home() {
 
   const handleCubeTap = () => {
     setShowColorPicker(prev => !prev);
-    play();
+
   };
 
   return (
-    <Card className={`w-screen max-w-md mx-auto p-6 overflow-hidden rounded-xl shadow-lg transition-colors duration-300 ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`}>
+    <Card className={`w-screen max-w-md mx-auto p-6 h-screen overflow-hidden rounded-xl shadow-lg transition-colors duration-300 ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`}>
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold">3D Interactive Demo</h2>
         <Switch
           checked={isDarkMode}
           onCheckedChange={(value) => {
             setIsDarkMode(value)
-            play()
+
           }}
           className="ml-4"
         />
         {isDarkMode ? <Moon className="w-6 h-6" /> : <Sun className="w-6 h-6" />}
       </div>
 
-      <div className="relative h-64 mb-6"> {/* Added relative positioning */}
+      <div className="relative h-64 mb-6">
         <Canvas>
-          <ambientLight intensity={lightIntensity} />
+          <ambientLight intensity={0.5} />
           <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
           <Cube isDarkMode={isDarkMode} cubeColor={cubeColor} onTap={handleCubeTap} />
           <OrbitControls enableZoom={false} />
         </Canvas>
 
         {showColorPicker && (
-          <div ref={colorPickerRef} className="absolute top-40 left-0 z-10"> {/* Adjusted positioning */}
+          <div ref={colorPickerRef} className="absolute top-40 left-0 z-10">
             <ChromePicker
               color={cubeColor}
               onChangeComplete={(color: ColorResult) => setCubeColor(color.hex)}
@@ -131,7 +127,7 @@ export default function Home() {
           className={`p-4 rounded-lg cursor-pointer ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'}`}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={play}
+
         >
           Hover me!
         </motion.div>
@@ -139,7 +135,7 @@ export default function Home() {
           className={`p-4 rounded-lg cursor-pointer ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'}`}
           whileHover={{ rotate: 5 }}
           whileTap={{ rotate: -5 }}
-          onClick={play}
+
         >
           Tilt me!
         </motion.div>
